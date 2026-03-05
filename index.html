@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zaman Kapsülü</title>
+    <title>Gölge Operasyon</title>
     <style>
         body {
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
@@ -21,26 +21,37 @@
             border-radius: 12px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             text-align: center;
-            max-width: 400px;
+            max-width: 450px;
             width: 90%;
         }
-        h1 {
-            font-size: 24px;
-            margin-bottom: 10px;
+        #sayac {
+            font-size: 28px;
+            font-weight: bold;
+            color: #4285f4; /* Google Mavisi */
+            margin-bottom: 15px;
+            letter-spacing: 1px;
         }
         p {
-            font-size: 14px;
-            color: #5f6368;
-            margin-bottom: 24px;
+            font-size: 15px;
+            color: #3c4043;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        .kucuk-not {
+            font-size: 11px;
+            color: #80868b;
+            margin-top: -10px;
+            margin-bottom: 25px;
+            font-style: italic;
         }
         input[type="text"] {
             width: 100%;
             padding: 12px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             border: 1px solid #dadce0;
             border-radius: 6px;
             box-sizing: border-box;
-            font-size: 16px;
+            font-size: 14px;
             outline: none;
             text-align: center;
         }
@@ -62,39 +73,121 @@
         button:hover {
             background-color: #3367d6;
         }
+        .ikincil-btn {
+            background: none;
+            color: #5f6368;
+            font-size: 13px;
+            margin-top: 15px;
+            padding: 0;
+            width: auto;
+            font-weight: normal;
+        }
+        .ikincil-btn:hover {
+            background: none;
+            text-decoration: underline;
+            color: #202124;
+        }
         #hata-mesaji {
-            color: #ea4335; 
-            font-size: 14px;
+            color: #ea4335; /* Google Kırmızısı */
+            font-size: 13px;
             margin-top: 15px;
             display: none;
             font-weight: bold;
+            line-height: 1.4;
+        }
+        #trol-mesaji {
+            color: #34a853; /* Google Yeşili */
+            font-size: 15px;
+            margin-top: 20px;
+            display: none;
+            font-weight: bold;
+            line-height: 1.4;
+        }
+        #sifre-unuttum-formu {
+            display: none;
         }
     </style>
 </head>
 <body>
 
-<div class="container" id="kilit-ekrani">
-    <h1>🔒 Dijital Zaman Kapsülü</h1>
-    <p>Gaziantep anılarına erişmek için lütfen şifreyi girin.</p>
-    <input type="text" id="sifre-giris" placeholder="Şifre nedir?">
-    <button onclick="sifreyiKontrolEt()">Kapsülü Aç</button>
-    <div id="hata-mesaji">Erişim reddedildi. Şifreyi yanlış hatırlıyorsun.</div>
+<div class="container">
+    <div id="sayac">Yükleniyor...</div>
+    
+    <div id="ana-ekran">
+        <p>Giriş yapmak için parmak izi, retina taraması veya DNA örneği gerekmiyor (neyse ki). Sadece o malum şifreyi gir.</p>
+        <p class="kucuk-not">Herhangi bir rüşvet, yemek, erotik hareket, kedi gözü, kaplumbağa göz yaşı işe yaramamaktadır. (en azından öyle olduğunu umuyorum.)</p>
+        
+        <input type="text" id="sifre-giris" placeholder="Şifre nedir?">
+        <button onclick="sifreyiKontrolEt()">Kapsülü Aç</button>
+        <div id="hata-mesaji">Erişim engellendi. Şu an rastgele tuşlara basıp mucize beklediğini umuyorum. Eğer ipucunu bilip hala bunu yazıyorsan, durum daha kötü. Kaldı 3 hakkın yoksa.. şaka şaka onu kodlamadan önce daha kodlamam gereken çok sayfa var.</div>
+        
+        <button class="ikincil-btn" onclick="formDegistir('unuttum')">Şifreyi Unuttum</button>
+    </div>
+
+    <div id="sifre-unuttum-formu">
+        <p style="font-weight: bold;">Şifreyi hatırlatmam için şu 3 soruyu doğru bilmelisin:</p>
+        <input type="text" placeholder="1. İlk tanıştığımızda üzerimde ne vardı?">
+        <input type="text" placeholder="2. En sevdiğim üçüncü yemek ne?">
+        <input type="text" placeholder="3. Şu an ne düşünüyorum?">
+        
+        <button onclick="trolCevapVer()" style="background-color: #fbbc05; color: #202124;">Cevapları Gönder</button>
+        <div id="trol-mesaji">Cevaplar yanlış olsa da önemli değil yavrum, zaten hatırlatmayacaktım. Sadece vaktini çalmak istedim.</div>
+        
+        <button class="ikincil-btn" onclick="formDegistir('ana')">Geri Dön ve Şifreyi Dene</button>
+    </div>
 </div>
 
 <script>
+    // 1. GERİ SAYIM SAYACI MANTIĞI
+    // Hedef tarih: 17 Mart 2026, 19:00:00
+    const hedefTarih = new Date("Mar 17, 2026 19:00:00").getTime();
+
+    const sayacGuncelle = setInterval(function() {
+        const simdi = new Date().getTime();
+        const fark = hedefTarih - simdi;
+
+        const gun = Math.floor(fark / (1000 * 60 * 60 * 24));
+        const saat = Math.floor((fark % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const dakika = Math.floor((fark % (1000 * 60 * 60)) / (1000 * 60));
+        const saniye = Math.floor((fark % (1000 * 60)) / 1000);
+
+        document.getElementById("sayac").innerHTML = gun + "g " + saat + "s " + dakika + "d " + saniye + "sn";
+
+        // Süre biterse yazacak metin
+        if (fark < 0) {
+            clearInterval(sayacGuncelle);
+            document.getElementById("sayac").innerHTML = "ZAMAN GELDİ";
+        }
+    }, 1000);
+
+    // 2. ŞİFRE KONTROL MANTIĞI
     function sifreyiKontrolEt() {
-        // Şifreyi buraya küçük harflerle ve boşluksuz yazmalısın.
-        const dogruSifre = "fıstıklıkatmer"; 
-        
-        // Kullanıcının girdiği metni küçültüp boşlukları siliyoruz ki büyük/küçük harf hatası olmasın
+        const dogruSifre = "fıstıklıkatmer"; // Şifreyi buradan değiştirebilirsin
         const girilenSifre = document.getElementById("sifre-giris").value.toLowerCase().replace(/\s/g, '');
         
         if (girilenSifre === dogruSifre) {
-            alert("Şifre doğru! Operasyonun ikinci aşaması olan 'Test' kısmı buraya eklenecek.");
+            alert("Şifre doğru! (Test ve Müzik aşamasına geçilecek)");
             document.getElementById("hata-mesaji").style.display = "none";
         } else {
             document.getElementById("hata-mesaji").style.display = "block";
         }
+    }
+
+    // 3. EKRANLAR ARASI GEÇİŞ MANTIĞI
+    function formDegistir(hedef) {
+        if (hedef === 'unuttum') {
+            document.getElementById('ana-ekran').style.display = 'none';
+            document.getElementById('sifre-unuttum-formu').style.display = 'block';
+        } else {
+            document.getElementById('sifre-unuttum-formu').style.display = 'none';
+            document.getElementById('ana-ekran').style.display = 'block';
+            document.getElementById('trol-mesaji').style.display = 'none'; // Geri dönünce mesajı sıfırla
+        }
+    }
+
+    // 4. TROL MESAJ MANTIĞI
+    function trolCevapVer() {
+        document.getElementById("trol-mesaji").style.display = "block";
     }
 </script>
 
