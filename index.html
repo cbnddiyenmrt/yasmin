@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zaman Kapsülü</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f8f9fa; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            color: #202124; 
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+        }
+        h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        p {
+            font-size: 14px;
+            color: #5f6368;
+            margin-bottom: 24px;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #dadce0;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 16px;
+            outline: none;
+            text-align: center;
+        }
+        input[type="text"]:focus {
+            border-color: #4285f4; 
+        }
+        button {
+            background-color: #4285f4;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.3s;
+            font-weight: bold;
+        }
+        button:hover {
+            background-color: #3367d6;
+        }
+        #hata-mesaji {
+            color: #ea4335; 
+            font-size: 14px;
+            margin-top: 15px;
+            display: none;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container" id="kilit-ekrani">
+    <h1>🔒 Dijital Zaman Kapsülü</h1>
+    <p>Gaziantep anılarına erişmek için lütfen şifreyi girin.</p>
+    <input type="text" id="sifre-giris" placeholder="Şifre nedir?">
+    <button onclick="sifreyiKontrolEt()">Kapsülü Aç</button>
+    <div id="hata-mesaji">Erişim reddedildi. Şifreyi yanlış hatırlıyorsun.</div>
+</div>
+
+<script>
+    function sifreyiKontrolEt() {
+        // Şifreyi buraya küçük harflerle ve boşluksuz yazmalısın.
+        const dogruSifre = "fıstıklıkatmer"; 
+        
+        // Kullanıcının girdiği metni küçültüp boşlukları siliyoruz ki büyük/küçük harf hatası olmasın
+        const girilenSifre = document.getElementById("sifre-giris").value.toLowerCase().replace(/\s/g, '');
+        
+        if (girilenSifre === dogruSifre) {
+            alert("Şifre doğru! Operasyonun ikinci aşaması olan 'Test' kısmı buraya eklenecek.");
+            document.getElementById("hata-mesaji").style.display = "none";
+        } else {
+            document.getElementById("hata-mesaji").style.display = "block";
+        }
+    }
+</script>
+
+</body>
+</html>
