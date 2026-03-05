@@ -23,24 +23,27 @@
             text-align: center;
             max-width: 450px;
             width: 90%;
-            position: relative; /* İçerideki mutlak konumlandırma için gerekli */
+            position: relative; 
+            margin-top: 80px; /* Görsel üste taşacağı için ekranda kesilmesin diye boşluk bıraktık */
         }
-        /* YENİ: SOL ÜSTTEKİ PİXEL LOGO STİLİ */
+        
+        /* GÜNCELLENEN PİXEL LOGO STİLİ */
         .logo-pixel {
             position: absolute;
-            top: 10px;
-            left: 10px;
-            height: 35px; /* Küçük, şık bir boy */
+            bottom: 100%; /* Görselin alt kısmını, beyaz kutunun tam üst çizgisine oturtur */
+            left: 20px; /* Sol köşeden sarı çemberin olduğu hizaya alır */
+            height: 140px; /* Boyutunu istediğin gibi ciddi oranda büyüttük */
             width: auto;
-            border-radius: 4px;
+            z-index: 10;
         }
+
         #sayac {
             font-size: 28px;
             font-weight: bold;
-            color: #4285f4; /* Google Mavisi */
+            color: #4285f4; 
             margin-bottom: 15px;
             letter-spacing: 1px;
-            margin-top: 10px; /* Logo için üstte boşluk */
+            margin-top: 10px; 
         }
         p {
             font-size: 15px;
@@ -78,10 +81,9 @@
             width: 100%;
             transition: background-color 0.3s;
             font-weight: bold;
-            display: block; /* Tam genişlik için */
-            margin-bottom: 10px; /* Butonlar arası boşluk */
+            display: block; 
+            margin-bottom: 10px; 
         }
-        /* MAVİ BUTON STİLİ */
         .mavi-btn {
             background-color: #4285f4;
             color: white;
@@ -89,15 +91,13 @@
         .mavi-btn:hover {
             background-color: #3367d6;
         }
-        /* YENİ: KIRMIZI "ŞİFREYİ UNUTTUM" BUTONU STİLİ */
         .kirmizi-btn {
-            background-color: #ea4335; /* Google Kırmızısı */
+            background-color: #ea4335; 
             color: white;
         }
         .kirmizi-btn:hover {
             background-color: #c5221f;
         }
-        /* YARIM BUTON STİLİ (Unuttum Formu Geri Dön) */
         .ikincil-btn {
             background: none;
             color: #5f6368;
@@ -114,7 +114,7 @@
             color: #202124;
         }
         #hata-mesaji {
-            color: #ea4335; /* Google Kırmızısı */
+            color: #ea4335; 
             font-size: 13px;
             margin-top: 10px;
             margin-bottom: 15px;
@@ -123,7 +123,7 @@
             line-height: 1.4;
         }
         #trol-mesaji {
-            color: #34a853; /* Google Yeşili */
+            color: #34a853; 
             font-size: 15px;
             margin-top: 20px;
             display: none;
@@ -138,13 +138,13 @@
 <body>
 
 <div class="container">
-    <img src="image_0.png" alt="Gölge Operasyon" class="logo-pixel">
+    <img src="karakter.png" alt="Karakterler" class="logo-pixel">
     
     <div id="sayac">Yükleniyor...</div>
     
     <div id="ana-ekran">
         <p>Giriş yapmak için parmak izi, retina taraması veya DNA örneği gerekmiyor (neyse ki). Sadece o malum şifreyi gir.</p>
-        <p class="kucuk-not">Herhangi bir rüşvet, yemek, erotik hareket, kedi gözü, kaplмага göz yaşı işe yaramamaktadır. (en azından öyle olduğunu umuyorum.)</p>
+        <p class="kucuk-not">Herhangi bir rüşvet, yemek, erotik hareket, kedi gözü, kaplumbağa göz yaşı işe yaramamaktadır. (en azından öyle olduğunu umuyorum.)</p>
         
         <input type="text" id="sifre-giris" placeholder="Şifre nedir?">
         
@@ -170,7 +170,6 @@
 
 <script>
     // 1. GERİ SAYIM SAYACI MANTIĞI
-    // Hedef tarih: 17 Mart 2026, 19:00:00
     const hedefTarih = new Date("Mar 17, 2026 19:00:00").getTime();
 
     const sayacGuncelle = setInterval(function() {
@@ -184,7 +183,6 @@
 
         document.getElementById("sayac").innerHTML = gun + "g " + saat + "s " + dakika + "d " + saniye + "sn";
 
-        // Süre biterse yazacak metin
         if (fark < 0) {
             clearInterval(sayacGuncelle);
             document.getElementById("sayac").innerHTML = "ZAMAN GELDİ";
@@ -193,10 +191,8 @@
 
     // 2. ŞİFRE KONTROL MANTIĞI
     function sifreyiKontrolEt() {
-        // ŞİFRE "terazi" OLARAK GÜNCELLENDİ
         const dogruSifre = "terazi"; 
         
-        // Kullanıcının girdiği metni küçültüp boşlukları siliyoruz ki büyük/küçük harf hatası olmasın
         const girilenSifre = document.getElementById("sifre-giris").value.toLowerCase().replace(/\s/g, '');
         
         if (girilenSifre === dogruSifre) {
@@ -215,7 +211,7 @@
         } else {
             document.getElementById('sifre-unuttum-formu').style.display = 'none';
             document.getElementById('ana-ekran').style.display = 'block';
-            document.getElementById('trol-mesaji').style.display = 'none'; // Geri dönünce mesajı sıfırla
+            document.getElementById('trol-mesaji').style.display = 'none'; 
         }
     }
 
