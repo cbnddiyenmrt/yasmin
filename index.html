@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>Zaman Kapsülü</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+<body>
+    <div id="app">
+
+        <!-- ═══ PHASE 1: GAME ═══ -->
+        <section id="game-section" class="active">
+            <header>
+                <div class="score-pill">
+                    <span id="score">0</span>/<span id="score-max">3</span>
+                </div>
+            </header>
+            <div class="battle-arena">
+                <div class="player-side">
+                    <div class="circle-wrapper" id="player-wrapper">
+                        <div id="player-wins" class="win-count">0</div>
+                        <div class="avatar-ring pink-glow">
+                            <img src="assets/girl.png" alt="Sen" class="avatar-img">
+                        </div>
+                        <div id="player-choice" class="small-choice">
+                            <i class="fa-regular fa-circle-question"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="vs-text">VS</div>
+                <div class="system-side">
+                    <div class="circle-wrapper" id="system-wrapper">
+                        <div id="system-wins" class="win-count">0</div>
+                        <div class="avatar-ring purple-glow">
+                            <img src="assets/boy_3.png" alt="Sistem" class="avatar-img">
+                        </div>
+                        <div id="system-choice" class="small-choice">
+                            <i class="fa-regular fa-circle-question"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="loading-bar" class="loading-bar-wrapper hidden">
+                <div class="loading-bar-track">
+                    <div class="loading-bar-fill"></div>
+                </div>
+            </div>
+            <div class="controls">
+                <button class="choice-btn" data-choice="tas">
+                    <i class="fa-solid fa-hand-fist"></i><span>Taş</span>
+                </button>
+                <button class="choice-btn" data-choice="kagit">
+                    <i class="fa-solid fa-hand"></i><span>Kağıt</span>
+                </button>
+                <button class="choice-btn" data-choice="makas">
+                    <i class="fa-solid fa-hand-scissors"></i><span>Makas</span>
+                </button>
+            </div>
+            <div id="round-result" class="result-message"></div>
+        </section>
+
+        <!-- ═══ TRANSITION ═══ -->
+        <section id="transition-section" class="hidden">
+            <h1 class="glow-text fade-in">Sen Kazandın...</h1>
+            <p class="fade-in delay-1" style="color: var(--text-secondary); font-size: 1.2rem;">Belki de bu sadece bir başlangıçtır?</p>
+        </section>
+
+        <!-- ═══ PHASE 2: HARITA ═══ -->
+        <section id="map-section" class="hidden p2-sec">
+            <div class="map-hdr">
+                <h2 class="map-title">Yolculuğumuz Devam Ediyor 😈✨</h2>
+                <p class="map-sub">Bazen yolun kendisi, varılacak yerden daha güzeldir. Ama sandığın içi de bir başka... Devam et.</p>
+            </div>
+            <div class="duo-path">
+                <!-- Nodes in DOM order 1→4, displayed bottom→top via column-reverse -->
+                <div class="pn-wrap" id="pn-1">
+                    <div class="path-nd" id="pnd-1" data-stage="1"><span class="nd-ico">⭐</span></div>
+                    <span class="nd-lbl">Zaman Kapsülü</span>
+                </div>
+                <div class="nd-conn"></div>
+                <div class="pn-wrap pn-l" id="pn-2">
+                    <div class="path-nd" id="pnd-2" data-stage="2"><span class="nd-ico">💭</span></div>
+                    <span class="nd-lbl">Kim Daha Çok?</span>
+                </div>
+                <div class="nd-conn"></div>
+                <div class="pn-wrap pn-r" id="pn-3">
+                    <div class="path-nd" id="pnd-3" data-stage="3"><span class="nd-ico">✍️</span></div>
+                    <span class="nd-lbl">Kapsüle Kayıt</span>
+                </div>
+                <div class="nd-conn"></div>
+                <div class="pn-wrap" id="pn-4">
+                    <div class="path-nd nd-chest" id="pnd-4" data-stage="4"><span class="nd-ico">🎁</span></div>
+                    <span class="nd-lbl">Sandık</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══ AKTİVİTE 1 ═══ -->
+        <section id="act1-sec" class="hidden p2-sec">
+            <div class="a-topbar">
+                <button class="bk-btn" id="a1-bk">←</button>
+                <div class="pr-track"><div class="pr-fill" id="a1-pr"></div></div>
+            </div>
+            <div class="a-body" id="a1-body"></div>
+            <div class="slide-fb" id="a1-fb">
+                <div class="fb-row">
+                    <span class="fb-ico" id="a1-fb-ico"></span>
+                    <span class="fb-txt" id="a1-fb-txt"></span>
+                </div>
+                <button class="fb-go" id="a1-fb-go">Devam</button>
+            </div>
+        </section>
+
+        <!-- ═══ AKTİVİTE 2 ═══ -->
+        <section id="act2-sec" class="hidden p2-sec">
+            <!-- Full-screen split (behind overlay) -->
+            <div class="a2-split">
+                <div class="a2-half a2-left" id="a2-left" data-choice="sen">
+                    <span class="a2-hlbl">Sen</span>
+                </div>
+                <div class="a2-half a2-right" id="a2-right" data-choice="ben">
+                    <span class="a2-hlbl">Ben</span>
+                </div>
+            </div>
+            <!-- Question overlay centered on screen -->
+            <div class="a2-overlay" id="a2-overlay">
+                <button class="bk-btn a2-bk-pos" id="a2-bk">←</button>
+                <div class="a2-q-card">
+                    <span class="a2-prefix" id="a2-prefix">Kim daha</span>
+                    <span class="a2-main" id="a2-main"></span>
+                </div>
+                <div class="a2-dots" id="a2-dots"></div>
+            </div>
+        </section>
+
+        <!-- ═══ AKTİVİTE 3 ═══ -->
+        <section id="act3-sec" class="hidden p2-sec">
+            <div class="a-topbar">
+                <button class="bk-btn" id="a3-bk">←</button>
+                <div class="pr-track"><div class="pr-fill" id="a3-pr"></div></div>
+            </div>
+            <div class="a-body" id="a3-body"></div>
+            <div class="slide-fb" id="a3-fb">
+                <div class="fb-row">
+                    <span class="fb-ico" id="a3-fb-ico"></span>
+                    <span class="fb-txt" id="a3-fb-txt"></span>
+                </div>
+                <button class="fb-go" id="a3-fb-go">Devam</button>
+            </div>
+        </section>
+
+        <!-- ═══ SANDIK ═══ -->
+        <!-- ═══ SANDIK ═══ -->
+        <section id="chest-sec" class="hidden p2-sec">
+            <div id="chest-closed" class="chest-view">
+                <span class="big-chest-ico">🎁</span>
+                <h2>Tebrikler! 🎉</h2>
+                <p>Tüm etapları tamamladın.<br>Sandık seni bekliyor...</p>
+                <button class="prim-btn pulse-glow" id="open-chest-btn">Sandığı Aç ✨</button>
+            </div>
+            <div id="chest-open" class="chest-view hidden">
+                <h2 style="font-size:1.5rem">Geleceğe Mesajın 🎥</h2>
+                <p>Bu kapsüle sonrası için bir video bırak.<br>
+                <small style="color:var(--text-secondary);font-size:0.85rem">Kayıt biter bitmez her şey otomatik olarak indirilir.</small></p>
+
+                <!-- Seçim butonları -->
+                <div id="vid-choice-area" class="vid-btns">
+                    <button class="vid-opt-btn" id="cam-btn">
+                        <i class="fa-solid fa-video"></i> Kamera Aç
+                    </button>
+                    <label class="vid-opt-btn" for="vid-file-inp">
+                        <i class="fa-solid fa-photo-film"></i> Galeriden Seç
+                    </label>
+                    <input type="file" id="vid-file-inp" accept="video/*" style="display:none">
+                </div>
+
+                <!-- Canlı kayıt alanı -->
+                <div id="vid-rec-wrap" class="hidden vid-live-area">
+                    <div class="rec-live-bar">
+                        <span class="rec-live-dot"></span>
+                        <span id="rec-timer-live">0:00</span>
+                        <span class="rec-live-txt">Kaydediliyor</span>
+                    </div>
+                    <video id="vid-live" autoplay muted playsinline class="vid-el"></video>
+                    <button class="stop-big-btn" id="stop-rec">⏹ Kaydı Durdur</button>
+                </div>
+
+                <!-- Tamamlandı alanı -->
+                <div id="vid-done-wrap" class="hidden vid-done-area">
+                    <div class="vid-done-ico">✅</div>
+                    <p id="vid-done-msg" class="vid-done-msg">Video kaydedildi! Her şey indiriliyor...</p>
+                    <video id="vid-saved" controls class="vid-el"></video>
+                    <button class="prim-btn" id="dl-vid-btn-manual">💾 Videoyu Tekrar İndir</button>
+                </div>
+
+                <button class="prim-btn sec-btn" id="dl-all-btn" style="margin-top:1.2rem">📦 Kapsülü İndir</button>
+            </div>
+        </section>
+
+    </div><!-- /#app -->
+
+    <!-- Gözleri Kapat Overlay -->
+    <div id="eyes-overlay" class="eyes-overlay hidden">
+        <span class="eyes-emoji">😌</span>
+        <div id="eyes-num" class="eyes-num">10</div>
+        <p class="eyes-label">Gözlerini kapat, düşün...</p>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
